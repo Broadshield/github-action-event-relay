@@ -1,0 +1,48 @@
+name: GitHub Action Event Relay
+description: Pass this github event information to another repository for processing
+branding:
+  icon: 'book-open'
+  color: 'blue'
+inputs:
+  event:
+    description: Provide a custom json event payload.
+    required: false
+  destination_repository:
+    description: The destination repository in the form of `ownername/reponame`
+    required: true
+  github_token:
+    description: >
+      A personal access token with the repo scope.
+      https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line
+    required: true
+    default: commits
+  eventType:
+    default: default
+    description: >
+      A custom event type to trigger it on, this can be used to 
+      customise the workflows run at the destination.
+      i.e.
+
+      ```
+      on:
+        repository_dispatch:
+          types: [default, run-deployment]
+      ```
+    required: false
+  jsonPayload:
+    description: >
+      A json payload which is converted to a javascript object and 
+      passed in the event's `client_payload` as `extraPayload`.
+      This is merged with the data from the yamlPayload.
+    required: false
+  yamlPayload:
+    description: >
+      A yaml payload which is converted to a javascript object and 
+      passed in the event's `client_payload` as `extraPayload`.
+      This is merged with the data from the jsonPayload.
+    required: false
+    default: 'false'
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
