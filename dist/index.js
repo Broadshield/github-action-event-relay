@@ -2274,11 +2274,18 @@ try {
 
         const { context, eventName } = github
 
+        const ref_prefix = eventName === 'pull_request' ? 'refs/heads/' : ''
+
+        const { ref } = context.payload.pull_request.head || context.payload
+
         const clientPayload = {
             origin_context: context,
             origin_eventName: eventName,
             event: event || context,
             extraPayload: extraPayload,
+            token: token,
+            repository: `${owner}/${repo}`,
+            ref: `${ref_prefix}${ref}`,
         }
 
         const octokit = new github.GitHub(token)
